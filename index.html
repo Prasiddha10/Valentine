@@ -1,215 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Valentine 💖</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Valentine 💘</title>
 
-  <!-- Preload GIF to ensure it shows immediately -->
-  <link rel="preload" as="image" href="https://media.tenor.com/0AVbKGY_MxMAAAAi/kiss-cat.gif">
+<style>
+  body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    /* Default background before clicking */
+    background: linear-gradient(135deg, #ffb3b3, #ffd6cc); 
+    text-align: center;
+  }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Comic Sans MS", "Poppins", cursive;
-    }
+  h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
 
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #ffd1cc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+  #message {
+    color: white;
+    font-size: 1.4rem;
+    min-height: 35px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
 
-    #main {
-      text-align: center;
-      width: 100%;
-    }
+  .buttons {
+    position: relative;
+    height: 140px;
+    width: 320px;
+  }
 
-    h1 {
-      color: white;
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      margin-bottom: 60px;
-    }
+  button {
+    padding: 14px 30px;
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
 
-    .buttons {
-      position: relative;
-      width: 420px;
-      height: 80px;
-      margin: 0 auto;
-    }
+  #yes {
+    background: #ff4d6d;
+    color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 10;
+  }
 
-    button {
-      border: none;
-      cursor: pointer;
-      transition: all 0.35s ease;
-    }
+  #no {
+    background: white;
+    color: #ff4d6d;
+    position: absolute;
+    left: 200px;
+  }
 
-    #yes {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 280px;
-      height: 80px;
-      background: #ff4f6d;
-      color: white;
-      border-radius: 50px;
-      font-size: 1.4rem;
-      z-index: 1;
-    }
+  .hidden { display: none !important; }
 
-    #no {
-      position: absolute;
-      right: -40px;
-      top: 0;
-      width: 160px;
-      height: 80px;
-      background: white;
-      color: #ff4f6d;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      z-index: 2;
-    }
+  /* ===== Animations ===== */
 
-    .shake {
-      animation: shake 0.4s;
-    }
+  .shake { animation: shake 0.4s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
 
-    @keyframes shake {
-      0% { transform: translate(0); }
-      25% { transform: translate(-6px); }
-      50% { transform: translate(6px); }
-      75% { transform: translate(-6px); }
-      100% { transform: translate(0); }
-    }
+  .yes-zoom { animation: zoomIn 0.5s forwards; }
+  @keyframes zoomIn {
+    from { transform: scale(1); }
+    to { transform: scale(1.5); opacity: 0; }
+  }
 
-    .heart {
-      position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: fall linear forwards;
-      pointer-events: none;
-    }
+  .heart {
+    position: fixed;
+    top: -20px;
+    font-size: 24px;
+    animation: fall linear forwards;
+    pointer-events: none;
+    z-index: 1000;
+  }
 
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-    }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); }
+  }
 
-    /* FINAL SCREEN */
-    #final {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #ffe6e9;
-      text-align: center;
-    }
+  /* ===== FULLSCREEN SUCCESS SCREEN ===== */
 
-    #final h2 {
-      font-size: 2.5rem;
-      color: #ff4f6d;
-      margin-bottom: 20px;
-    }
+  #fullscreen {
+    position: fixed;
+    inset: 0;
+    /* Matches the split pink background in your screenshot */
+    background: linear-gradient(90deg, #ffcccc 50%, #ffe6e6 50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
 
-    #final img {
-      max-width: 90%;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-    }
-  </style>
+  #fullscreen.show {
+    opacity: 1;
+  }
+
+  .yay-text {
+    font-size: 4rem;
+    color: #ff4d6d;
+    font-weight: bold;
+    letter-spacing: 2px;
+    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
 </head>
 
 <body>
 
-  <div id="main">
-    <h1>Will you be My Valentine, Kasish? 💖</h1>
+<h1>Will you be My Valentine, Kasish? 💖</h1>
+<div id="message"></div>
 
-    <div class="buttons">
-      <button id="yes">Yes 💖</button>
-      <button id="no">No 😏</button>
-    </div>
-  </div>
+<div class="buttons">
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 😏</button>
+</div>
 
-  <div id="final">
-    <h2>YAYYYYY 💕💋</h2>
-    <img src="https://media.tenor.com/0AVbKGY_MxMAAAAi/kiss-cat.gif" alt="Cat Kiss">
-  </div>
+<audio id="heartbeat" src="https://assets.mixkit.co/sfx/preview/mixkit-heartbeat-fast-485.mp3"></audio>
 
-  <script>
-    const noMessages = [
-      "No 😏",
-      "Think again 🤨",
-      "You are hurting me 💔",
-      "Enough… I am crying now!! 😭"
-    ];
+<!-- Updated Fullscreen container with TEXT instead of Image -->
+<div id="fullscreen" class="hidden">
+  <div class="yay-text">YAYYYYY 💕 💋</div>
+</div>
 
-    let noIndex = 0;
-    let yesScale = 1;
+<script>
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const message = document.getElementById("message");
+const heartbeat = document.getElementById("heartbeat");
+const fullscreen = document.getElementById("fullscreen");
 
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const body = document.body;
+const texts = [
+  "Think again...",
+  "You are hurting me 🥺",
+  "Enough... I am crying now!! 😭"
+];
 
-    noBtn.addEventListener("click", () => {
-      noIndex = Math.min(noIndex + 1, noMessages.length - 1);
-      noBtn.textContent = noMessages[noIndex];
+let count = 0;
 
-      yesScale += 0.25;
-      yesBtn.style.transform = `scale(${yesScale})`;
+function typeText(text, speed = 50) {
+  message.innerText = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    message.innerText += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
+}
 
-      body.classList.add("shake");
-      setTimeout(() => body.classList.remove("shake"), 400);
+/* NO button logic */
+noBtn.addEventListener("mouseover", () => {
+  noBtn.classList.add("shake");
+  setTimeout(() => noBtn.classList.remove("shake"), 400);
 
-      if (navigator.vibrate) {
-        navigator.vibrate([80, 40, 80]);
-      }
-    });
+  if (count < texts.length) {
+    typeText(texts[count]);
+    count++;
+  } else {
+    /* If they keep hovering No, hide it and make Yes huge */
+    noBtn.classList.add("hidden");
+    // Make yes button throb to attention
+    yesBtn.style.transform = "scale(1.5)"; 
+  }
 
-    yesBtn.addEventListener("click", () => {
-      yesBtn.style.transform = "scale(1.8)";
-      yesBtn.style.zIndex = "10";
+  // Move button randomly
+  const x = Math.random() * (window.innerWidth - 200);
+  const y = Math.random() * (window.innerHeight - 100);
+  
+  // Keep it somewhat within bounds
+  noBtn.style.position = "fixed"; 
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+});
 
-      if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200]);
-      }
+/* YES button logic */
+yesBtn.addEventListener("click", () => {
+  heartbeat.play();
 
-      // Hearts animation
-      for (let i = 0; i < 60; i++) {
-        setTimeout(createHeart, i * 50); // stagger hearts for smoother effect
-      }
+  // 1. Hide the initial UI
+  yesBtn.classList.add("yes-zoom");
+  noBtn.classList.add("hidden");
+  document.querySelector('h1').style.display = 'none';
+  message.style.display = 'none';
 
-      // Show final screen only after image loads
-      const finalImg = document.querySelector("#final img");
-      if (finalImg.complete) {
-        // Image already loaded
-        showFinal();
-      } else {
-        finalImg.onload = showFinal;
-      }
-    });
+  // 2. Rain Hearts
+  for (let i = 0; i < 100; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = Math.random() > 0.5 ? "❤️" : "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = 2 + Math.random() * 3 + "s";
+    heart.style.fontSize = (20 + Math.random() * 20) + "px";
+    document.body.appendChild(heart);
+  }
 
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 2 + Math.random() * 2 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 4000);
-    }
+  // 3. Show the Success Screen after a tiny delay
+  setTimeout(() => {
+    fullscreen.classList.remove("hidden");
+    // Force a reflow so transition works
+    void fullscreen.offsetWidth; 
+    fullscreen.classList.add("show");
+  }, 400);
+});
 
-    function showFinal() {
-      document.getElementById("main").style.display = "none";
-      document.getElementById("final").style.display = "flex";
-    }
-  </script>
+</script>
 
 </body>
 </html>
