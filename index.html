@@ -42,9 +42,11 @@
 
     #message {
       color: white;
-      font-size: 1.4rem;
-      min-height: 35px;
+      font-size: 2.5rem;
+      min-height: 60px;
       margin-bottom: 20px;
+      font-weight: bold;
+      letter-spacing: 2px;
     }
 
     .buttons {
@@ -57,14 +59,15 @@
     }
 
     button {
-      padding: 20px 50px;
-      font-size: 1.8rem;
+      padding: 30px 60px;
+      font-size: 2rem;
       border: none;
       border-radius: 40px;
       cursor: pointer;
       transition: transform 0.1s ease;
       position: relative;
       z-index: 1;
+      line-height: 1.5;
     }
 
     #yes {
@@ -87,7 +90,7 @@
 
     /* Button shake */
     .shake {
-      animation: shake 1.4s;
+      animation: shake 0.1s;
     }
 
     @keyframes shake {
@@ -110,7 +113,7 @@
 
     /* YES slow zoom */
     .yes-zoom {
-      animation: zoomIn 2.2s forwards;
+      animation: zoomIn 1.2s forwards;
     }
 
     @keyframes zoomIn {
@@ -124,7 +127,7 @@
 
     /* YES explode */
     .yes-explode {
-      animation: explode 2.6s forwards;
+      animation: explode 1.6s forwards;
     }
 
     @keyframes explode {
@@ -136,7 +139,7 @@
 
     /* Screen shake synced with heartbeat */
     .screen-shake {
-      animation: screenShake 1.8s infinite;
+      animation: screenShake 0.2s infinite;
     }
 
     @keyframes screenShake {
@@ -214,6 +217,22 @@
     let noScale = 1;
     let isNoFixed = true;
 
+    // Typing effect
+    let typingInterval = null;
+    function typeText(text, speed = 60) {
+      if (typingInterval) clearInterval(typingInterval);
+      message.innerText = "";
+      let i = 0;
+      typingInterval = setInterval(() => {
+        if (i < text.length) {
+          message.innerText += text[i];
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, speed);
+    }
+
     // Initialize no button position
     noBtn.style.right = "100px";
     noBtn.style.top = "50%";
@@ -236,7 +255,7 @@
       noBtn.style.left = Math.random() * (window.innerWidth - 200) + "px";
       noBtn.style.top = Math.random() * (window.innerHeight - 100) + "px";
       noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
-    }, 2000);
+    }, 1550);
 
     /* NO button click only */
     noBtn.addEventListener("click", (e) => {
@@ -250,12 +269,8 @@
         noBtn.innerText = texts[count];
         count++;
 
-        // Check if this was the last message
+        // Check if this was the last message - just return, don't auto-hide
         if (count === texts.length) {
-          setTimeout(() => {
-            noBtn.classList.add("hidden");
-            yesBtn.classList.add("yes-zoom");
-          }, 1500);
           return;
         }
 
@@ -266,12 +281,22 @@
         noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
       }
 
+      // If we've shown all messages, hide the button on next click
+      if (count === texts.length) {
+        noBtn.classList.add("hidden");
+        yesBtn.classList.add("yes-zoom");
+        return;
+      }
+
       moveNo();
     });
 
     /* YES FINAL */
     yesBtn.addEventListener("click", () => {
       heartbeat.play();
+
+      // Hide no button immediately
+      noBtn.classList.add("hidden");
 
       // Mobile vibration
       if (navigator.vibrate) {
@@ -296,10 +321,23 @@
         heart.className = "heart";
         heart.innerText = "❤️";
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+        heart.style.animationDuration = 2 + Math.random() * 1 + "s";
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 4000);
       }
+      // Type the message in the yes button
+      let buttonText = "";
+      const messageText = "Come closer… 👀❤️";
+      let charIndex = 0;
+      const buttonTypingInterval = setInterval(() => {
+        if (charIndex < messageText.length) {
+          buttonText += messageText[charIndex];
+          yesBtn.innerText = buttonText;
+          charIndex++;
+        } else {
+          clearInterval(buttonTypingInterval);
+        }
+      }, 120);
 
       setTimeout(() => {
         document.body.innerHTML = `<div id="fullscreen"><img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"></div>`;
