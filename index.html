@@ -1,200 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Valentine 💖</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Valentine 💘</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Comic Sans MS", "Poppins", cursive;
-    }
+<style>
+  body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(135deg, #ffb3b3, #ffd6cc);
+    text-align: center;
+  }
 
-    body {
-      margin: 0;
-      height: 100vh;
-      background: #ffd1cc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+  h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
 
-    #main {
-      text-align: center;
-      width: 100%;
-    }
+  #message {
+    color: white;
+    font-size: 1.4rem;
+    min-height: 35px;
+    margin-bottom: 20px;
+  }
 
-    h1 {
-      color: white;
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      margin-bottom: 60px;
-    }
+  .buttons {
+    position: relative;
+    height: 140px;
+    width: 320px;
+  }
 
-    .buttons {
-      position: relative;
-      width: 420px;
-      height: 80px;
-      margin: 0 auto;
-    }
+  button {
+    padding: 14px 30px;
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+  }
 
-    button {
-      border: none;
-      cursor: pointer;
-      transition: all 0.35s ease;
-    }
+  #yes {
+    background: #ff4d6d;
+    color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
 
-    #yes {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 280px;
-      height: 80px;
-      background: #ff4f6d;
-      color: white;
-      border-radius: 50px;
-      font-size: 1.4rem;
-      z-index: 1;
-    }
+  #no {
+    background: white;
+    color: #ff4d6d;
+    position: absolute;
+    left: 200px;
+  }
 
-    #no {
-      position: absolute;
-      right: -40px;
-      top: 0;
-      width: 160px;
-      height: 80px;
-      background: white;
-      color: #ff4f6d;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      z-index: 2;
-    }
+  .hidden { display: none; }
 
-    .shake {
-      animation: shake 0.4s;
-    }
+  /* ===== Animations ===== */
 
-    @keyframes shake {
-      0% { transform: translate(0); }
-      25% { transform: translate(-6px); }
-      50% { transform: translate(6px); }
-      75% { transform: translate(-6px); }
-      100% { transform: translate(0); }
-    }
+  /* Button shake */
+  .shake {
+    animation: shake 0.4s;
+  }
 
-    .heart {
-      position: fixed;
-      top: -10px;
-      font-size: 24px;
-      animation: fall linear forwards;
-      pointer-events: none;
-    }
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+  }
 
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-        opacity: 0;
-      }
-    }
+  /* YES slow zoom */
+  .yes-zoom {
+    animation: zoomIn 1.2s forwards;
+  }
 
-    /* FINAL SCREEN */
-    #final {
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #ffe6e9;
-      text-align: center;
-    }
+  @keyframes zoomIn {
+    from { transform: scale(1); }
+    to { transform: scale(2); }
+  }
 
-    #final h2 {
-      font-size: 2.5rem;
-      color: #ff4f6d;
-      margin-bottom: 20px;
-    }
+  /* YES explode */
+  .yes-explode {
+    animation: explode 0.6s forwards;
+  }
 
-    #final img {
-      max-width: 90%;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  @keyframes explode {
+    to {
+      transform: scale(4);
+      opacity: 0;
     }
-  </style>
+  }
+
+  /* Screen shake synced with heartbeat */
+  .screen-shake {
+    animation: screenShake 0.3s infinite;
+  }
+
+  @keyframes screenShake {
+    0% { transform: translate(0); }
+    25% { transform: translate(-8px, 0); }
+    50% { transform: translate(8px, 0); }
+    75% { transform: translate(-8px, 0); }
+    100% { transform: translate(0); }
+  }
+
+  /* Heart confetti */
+  .heart {
+    position: fixed;
+    top: -10px;
+    font-size: 20px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Fullscreen ending */
+  #fullscreen {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  #fullscreen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
 </head>
 
 <body>
 
-  <div id="main">
-    <h1>Will you be My Valentine, Kasish? 💖</h1>
+<h1>Will you be My Valentine, Kasish? 💖</h1>
+<div id="message"></div>
 
-    <div class="buttons">
-      <button id="yes">Yes 💖</button>
-      <button id="no">No 😏</button>
-    </div>
-  </div>
+<div class="buttons">
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 😏</button>
+</div>
 
-  <div id="final">
-    <h2>YAYYYYY 💕💋</h2>
-    <img src="https://media.tenor.com/0AVbKGY_MxMAAAAi/kiss-cat.gif" alt="Cat Kiss">
-  </div>
+<audio id="heartbeat" src="https://assets.mixkit.co/sfx/preview/mixkit-heartbeat-fast-485.mp3"></audio>
 
-  <script>
-    const noMessages = [
-      "No 😏",
-      "Think again 🤨",
-      "You are hurting me 💔",
-      "Enough… I am crying now!! 😭"
-    ];
+<script>
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const message = document.getElementById("message");
+const heartbeat = document.getElementById("heartbeat");
 
-    let noIndex = 0;
-    let yesScale = 1;
+const texts = [
+  "Think again",
+  "you are hurting me?",
+  "Enough... I am crying now!! 😭"
+];
 
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const body = document.body;
+let count = 0;
 
-    noBtn.addEventListener("click", () => {
-      noIndex = Math.min(noIndex + 1, noMessages.length - 1);
-      noBtn.textContent = noMessages[noIndex];
+/* Typing effect */
+function typeText(text, speed = 60) {
+  message.innerText = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    message.innerText += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
+}
 
-      yesScale += 0.25;
-      yesBtn.style.transform = `scale(${yesScale})`;
+/* NO logic */
+noBtn.addEventListener("mouseover", () => {
+  noBtn.classList.add("shake");
+  setTimeout(() => noBtn.classList.remove("shake"), 400);
 
-      body.classList.add("shake");
-      setTimeout(() => body.classList.remove("shake"), 400);
+  if (count < texts.length) {
+    typeText(texts[count]);
+    count++;
+  }
 
-      if (navigator.vibrate) {
-        navigator.vibrate([80, 40, 80]);
-      }
-    });
+  if (count === texts.length) {
+    noBtn.classList.add("hidden");
+    yesBtn.classList.add("yes-zoom");
+    return;
+  }
 
-    yesBtn.addEventListener("click", () => {
-      yesBtn.style.transform = "scale(1.8)";
-      yesBtn.style.zIndex = "10";
+  noBtn.style.left = Math.random() * 220 + "px";
+  noBtn.style.top = Math.random() * 60 + "px";
+});
 
-      if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200]);
-      }
+/* YES FINAL */
+yesBtn.addEventListener("click", () => {
+  heartbeat.play();
 
-      for (let i = 0; i < 60; i++) createHeart();
+  // Mobile vibration
+  if (navigator.vibrate) {
+    navigator.vibrate([200, 100, 200, 100, 400]);
+  }
 
-      setTimeout(() => {
-        document.getElementById("main").style.display = "none";
-        document.getElementById("final").style.display = "flex";
-      }, 900);
-    });
+  yesBtn.classList.add("yes-zoom");
 
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 2 + Math.random() * 2 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 4000);
-    }
-  </script>
+  setTimeout(() => {
+    yesBtn.classList.add("yes-explode");
+  }, 1200);
+
+  // Screen shake synced to heartbeat
+  document.body.classList.add("screen-shake");
+  setTimeout(() => document.body.classList.remove("screen-shake"), 1200);
+
+  // Heart confetti
+  for (let i = 0; i < 120; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }
+
+  typeText("Come closer… 👀❤️", 80);
+
+  setTimeout(() => {
+    document.body.innerHTML = `
+      <div id="fullscreen">
+        <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+      </div>
+    `;
+  }, 3600);
+});
+</script>
 
 </body>
 </html>
