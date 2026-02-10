@@ -5,6 +5,9 @@
   <title>Valentine 💖</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Preload GIF to ensure it shows immediately -->
+  <link rel="preload" as="image" href="https://media.tenor.com/0AVbKGY_MxMAAAAi/kiss-cat.gif">
+
   <style>
     * {
       box-sizing: border-box;
@@ -177,12 +180,19 @@
         navigator.vibrate([200, 100, 200]);
       }
 
-      for (let i = 0; i < 60; i++) createHeart();
+      // Hearts animation
+      for (let i = 0; i < 60; i++) {
+        setTimeout(createHeart, i * 50); // stagger hearts for smoother effect
+      }
 
-      setTimeout(() => {
-        document.getElementById("main").style.display = "none";
-        document.getElementById("final").style.display = "flex";
-      }, 900);
+      // Show final screen only after image loads
+      const finalImg = document.querySelector("#final img");
+      if (finalImg.complete) {
+        // Image already loaded
+        showFinal();
+      } else {
+        finalImg.onload = showFinal;
+      }
     });
 
     function createHeart() {
@@ -193,6 +203,11 @@
       heart.style.animationDuration = 2 + Math.random() * 2 + "s";
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 4000);
+    }
+
+    function showFinal() {
+      document.getElementById("main").style.display = "none";
+      document.getElementById("final").style.display = "flex";
     }
   </script>
 
