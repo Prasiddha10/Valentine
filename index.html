@@ -1,213 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Valentine 💖</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta charset="UTF-8">
+  <title>Valentine 💘</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Comic Sans MS", "Poppins", cursive;
-    }
-
     body {
-      margin: 0;
-      background: #ffc9c9;
       height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      margin: 0;
       overflow: hidden;
-      transition: transform 0.2s;
-    }
-
-    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(135deg, #ffb3b3, #ffd6cc);
       text-align: center;
-      max-width: 90%;
     }
 
     h1 {
-      font-size: 2.6rem;
       color: white;
-      margin-bottom: 50px;
-      animation: heartbeat 1.5s infinite;
+      font-size: 3rem;
+      margin-top: -100px;
+      margin-bottom: 10px;
+      animation: heartbeat 4.8s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(1.1);
+      }
+      50% {
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(1.15);
+      }
+    }
+
+    #message {
+      color: white;
+      font-size: 1.4rem;
+      min-height: 35px;
+      margin-bottom: 20px;
     }
 
     .buttons {
       position: relative;
+      height: 80px;
+      width: auto;
       display: flex;
-      gap: 20px;
       justify-content: center;
       align-items: center;
     }
 
     button {
+      padding: 20px 50px;
+      font-size: 1.8rem;
       border: none;
-      border-radius: 50px;
-      padding: 18px 40px;
-      font-size: 1.4rem;
+      border-radius: 40px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.1s ease;
+      position: relative;
+      z-index: 1;
     }
 
     #yes {
-      background: #ff4f6d;
+      background: #4ade80;
       color: white;
-      box-shadow: 0 10px 30px rgba(255,79,109,0.5);
-      transform-origin: center;
     }
 
     #no {
-      background: white;
-      color: #ff4f6d;
+      background: #ef4444;
+      color: white;
+      position: fixed;
+      z-index: 2;
     }
 
-    .message {
-      margin-top: 30px;
-      font-size: 1.3rem;
-      color: #fff;
-      min-height: 1.5em;
+    .hidden {
+      display: none;
     }
 
-    /* Heartbeat */
-    @keyframes heartbeat {
-      0% { transform: scale(1); }
-      25% { transform: scale(1.05); }
-      50% { transform: scale(1); }
-      75% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
+    /* ===== Animations ===== */
 
-    /* Screen shake */
+    /* Button shake */
     .shake {
       animation: shake 0.4s;
     }
 
     @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-6px); }
-      50% { transform: translateX(6px); }
-      75% { transform: translateX(-6px); }
-      100% { transform: translateX(0); }
+      0% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-6px);
+      }
+      50% {
+        transform: translateX(6px);
+      }
+      75% {
+        transform: translateX(-6px);
+      }
+      100% {
+        transform: translateX(0);
+      }
     }
 
-    /* Confetti hearts */
+    /* YES slow zoom */
+    .yes-zoom {
+      animation: zoomIn 1.2s forwards;
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(2);
+      }
+    }
+
+    /* YES explode */
+    .yes-explode {
+      animation: explode 0.6s forwards;
+    }
+
+    @keyframes explode {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Screen shake synced with heartbeat */
+    .screen-shake {
+      animation: screenShake 0.3s infinite;
+    }
+
+    @keyframes screenShake {
+      0% {
+        transform: translate(0);
+      }
+      25% {
+        transform: translate(-8px, 0);
+      }
+      50% {
+        transform: translate(8px, 0);
+      }
+      75% {
+        transform: translate(-8px, 0);
+      }
+      100% {
+        transform: translate(0);
+      }
+    }
+
+    /* Heart confetti */
     .heart {
       position: fixed;
-      font-size: 24px;
-      animation: fall 3s linear forwards;
+      top: -10px;
+      font-size: 20px;
+      animation: fall linear forwards;
     }
 
     @keyframes fall {
-      0% {
-        transform: translateY(-20px) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
+      to {
         transform: translateY(110vh) rotate(360deg);
         opacity: 0;
       }
     }
 
-    /* Final screen */
-    .final {
-      display: none;
-      flex-direction: column;
-      align-items: center;
+    /* Fullscreen ending */
+    #fullscreen {
+      position: fixed;
+      inset: 0;
+      background: black;
+      display: flex;
       justify-content: center;
-      text-align: center;
+      align-items: center;
+      z-index: 999;
     }
 
-    .final img {
-      max-width: 300px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      margin-top: 20px;
-    }
-
-    .zoom {
-      transform: scale(1.4);
+    #fullscreen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-
-  <div class="container" id="main">
-    <h1>Will you be My Valentine, Kasish? 💖</h1>
-
-    <div class="buttons">
-      <button id="yes">Yes 💞</button>
-      <button id="no">No 😏</button>
-    </div>
-
-    <div class="message" id="message"></div>
+  <h1>Will you be My Valentine, Kasish? 💖</h1>
+  <div id="message"></div>
+  <div class="buttons">
+    <button id="yes">Yes 💖</button>
+    <button id="no">No 😏</button>
   </div>
-
-  <div class="final" id="final">
-    <h1>YAYYY 💕💍</h1>
-    <p>You made my heart explode 😭❤️</p>
-    <img src="/mnt/data/d84d40b0-7d42-4bdc-9678-fdb26b58ae7c.png" alt="Cat Kiss">
-  </div>
+  <audio id="heartbeat" src="https://assets.mixkit.co/sfx/preview/mixkit-heartbeat-fast-485.mp3"></audio>
 
   <script>
-    const noTexts = [
-      "Think again 🤨",
-      "You are hurting me 💔",
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+    const message = document.getElementById("message");
+    const heartbeat = document.getElementById("heartbeat");
+    const texts = [
+      "Think again",
+      "you are hurting me?",
       "Enough... I am crying now!! 😭"
     ];
-
-    let noCount = 0;
+    let count = 0;
     let yesScale = 1;
+    let noScale = 1;
+    let isNoFixed = true;
 
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const msg = document.getElementById("message");
-    const body = document.body;
+    // Initialize no button position
+    noBtn.style.right = "100px";
+    noBtn.style.top = "50%";
+    noBtn.style.transform = `translateY(-50%) scale(${noScale})`;
 
-    noBtn.addEventListener("click", () => {
-      msg.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
-      noCount++;
+    /* NO logic - Move on click */
+    function moveNo() {
+      noBtn.classList.add("shake");
+      setTimeout(() => noBtn.classList.remove("shake"), 400);
+      const moveRange = 200;
+      noBtn.style.right = "auto";
+      noBtn.style.left = Math.random() * (window.innerWidth - 200) + "px";
+      noBtn.style.top = Math.random() * (window.innerHeight - 100) + "px";
+      noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
+    }
 
-      yesScale += 0.25;
-      yesBtn.style.transform = `scale(${yesScale})`;
+    // Continuously move no button while preserving scale
+    setInterval(() => {
+      noBtn.style.right = "auto";
+      noBtn.style.left = Math.random() * (window.innerWidth - 200) + "px";
+      noBtn.style.top = Math.random() * (window.innerHeight - 100) + "px";
+      noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
+    }, 2000);
 
-      body.classList.add("shake");
-      setTimeout(() => body.classList.remove("shake"), 400);
+    /* NO button click only */
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
 
-      if (navigator.vibrate) {
-        navigator.vibrate([100, 50, 100]);
+      // Screen shake when clicking no
+      document.body.classList.add("screen-shake");
+      setTimeout(() => document.body.classList.remove("screen-shake"), 400);
+
+      if (count < texts.length) {
+        noBtn.innerText = texts[count];
+        count++;
+
+        // Check if this was the last message
+        if (count === texts.length) {
+          setTimeout(() => {
+            noBtn.classList.add("hidden");
+            yesBtn.classList.add("yes-zoom");
+          }, 1500);
+          return;
+        }
+
+        // Increase yes button size and decrease no button size
+        yesScale += 0.15;
+        noScale -= 0.1;
+        yesBtn.style.transform = `scale(${yesScale})`;
+        noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
       }
+
+      moveNo();
     });
 
+    /* YES FINAL */
     yesBtn.addEventListener("click", () => {
-      yesBtn.classList.add("zoom");
+      heartbeat.play();
 
+      // Mobile vibration
       if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200]);
+        navigator.vibrate([200, 100, 200, 100, 400]);
       }
 
-      for (let i = 0; i < 60; i++) {
-        createHeart();
+      // Grow huge
+      yesBtn.style.transform = "scale(6)";
+      yesBtn.style.transition = "transform 0.8s ease-in-out";
+
+      setTimeout(() => {
+        yesBtn.classList.add("yes-explode");
+      }, 800);
+
+      // Screen shake synced to heartbeat
+      document.body.classList.add("screen-shake");
+      setTimeout(() => document.body.classList.remove("screen-shake"), 1200);
+
+      // Heart confetti
+      for (let i = 0; i < 120; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
       }
 
       setTimeout(() => {
-        document.getElementById("main").style.display = "none";
-        document.getElementById("final").style.display = "flex";
-      }, 900);
+        document.body.innerHTML = `<div id="fullscreen"><img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif"></div>`;
+      }, 3600);
     });
-
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 2 + Math.random() * 2 + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 4000);
-    }
   </script>
-
 </body>
 </html>
