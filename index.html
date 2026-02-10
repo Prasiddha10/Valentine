@@ -1,126 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentine 💘</title>
-  <style>
-    body {
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      text-align: center;
-    }
+<meta charset="UTF-8">
+<title>Valentine 💘</title>
 
-    h1 {
-      color: white;
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-    }
+<style>
+  body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Comic Sans MS', cursive;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    text-align: center;
+    transition: transform 2s ease;
+  }
 
-    #message {
-      color: #fff;
-      font-size: 1.3rem;
-      height: 30px;
-      margin-bottom: 20px;
-    }
+  h1 {
+    color: white;
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+  }
 
-    .buttons {
-      position: relative;
-      height: 120px;
-      width: 300px;
-    }
+  #message {
+    color: #fff;
+    font-size: 1.4rem;
+    min-height: 35px;
+    margin-bottom: 20px;
+  }
 
-    button {
-      padding: 12px 25px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+  .buttons {
+    position: relative;
+    height: 120px;
+    width: 300px;
+  }
 
-    #yes {
-      background-color: #ff4d6d;
-      color: white;
-    }
+  button {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+  }
 
-    #no {
-      background-color: white;
-      color: #ff4d6d;
-      position: absolute;
-      left: 180px;
-      top: 0;
-    }
+  #yes {
+    background-color: #ff4d6d;
+    color: white;
+  }
 
-    .hidden {
-      display: none;
-    }
+  #no {
+    background-color: white;
+    color: #ff4d6d;
+    position: absolute;
+    left: 180px;
+  }
 
-    .result img {
-      width: 280px;
-      border-radius: 20px;
-      margin-top: 20px;
+  .hidden { display: none; }
+
+  /* Button shake */
+  .shake {
+    animation: shake 0.4s;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    50% { transform: translateX(6px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* Screen shake */
+  .screen-shake {
+    animation: screenShake 0.6s;
+  }
+
+  @keyframes screenShake {
+    0% { transform: translate(0); }
+    25% { transform: translate(-10px, 0); }
+    50% { transform: translate(10px, 0); }
+    75% { transform: translate(-10px, 0); }
+    100% { transform: translate(0); }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(720deg);
+      opacity: 0;
     }
-  </style>
+  }
+
+  /* Fullscreen GIF */
+  #fullscreen {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  #fullscreen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
 </head>
+
 <body>
 
-  <h1>Will you be My Valentine, Kasish? &lt;3</h1>
-  <div id="message"></div>
+<h1>Will you be My Valentine, Kasish? 💖</h1>
+<div id="message"></div>
 
-  <div class="buttons" id="buttons">
-    <button id="yes">Yes 💖</button>
-    <button id="no">No 😏</button>
-  </div>
+<div class="buttons" id="buttons">
+  <button id="yes">Yes 💖</button>
+  <button id="no">No 😏</button>
+</div>
 
-  <div class="result hidden" id="result">
-    <h1>YAYYYYY 💕</h1>
-    <p>I knew it 😘</p>
-    <img src="https://media.giphy.com/media/v6aOjy0Qo1fIA/giphy.gif">
-  </div>
+<!-- Heartbeat sound -->
+<audio id="heartbeat" src="https://assets.mixkit.co/sfx/preview/mixkit-heartbeat-fast-485.mp3"></audio>
 
-  <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const message = document.getElementById("message");
-    const buttons = document.getElementById("buttons");
-    const result = document.getElementById("result");
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const message = document.getElementById("message");
+const buttons = document.getElementById("buttons");
+const heartbeat = document.getElementById("heartbeat");
 
-    const texts = [
-      "think again",
-      "you are hurting me?",
-      "Enough ... I am crying now!! 😭"
-    ];
+const texts = [
+  "Think again",
+  "you are hurting me?",
+  "Enough ... I am crying now!! 😭"
+];
 
-    let count = 0;
+let count = 0;
 
-    noBtn.addEventListener("mouseover", () => {
-      if (count < texts.length) {
-        message.innerText = texts[count];
-        count++;
-      }
+function shake(el) {
+  el.classList.add("shake");
+  setTimeout(() => el.classList.remove("shake"), 400);
+}
 
-      const x = Math.random() * 200 - 100;
-      const y = Math.random() * 80 - 40;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+/* Typing animation */
+function typeText(text, speed = 60) {
+  message.innerText = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    message.innerText += text[i];
+    i++;
+    if (i >= text.length) clearInterval(interval);
+  }, speed);
+}
 
-      if (count === texts.length) {
-        yesBtn.style.transform = "scale(1.4)";
-        noBtn.classList.add("hidden");
-      }
-    });
+/* NO button behavior */
+noBtn.addEventListener("mouseover", () => {
+  shake(noBtn);
 
-    yesBtn.addEventListener("click", () => {
-      buttons.classList.add("hidden");
-      message.classList.add("hidden");
-      result.classList.remove("hidden");
-    });
-  </script>
+  if (count < texts.length) {
+    typeText(texts[count]);
+    count++;
+  }
+
+  noBtn.style.transform =
+    `translate(${Math.random()*200-100}px, ${Math.random()*80-40}px)`;
+
+  if (count === texts.length) {
+    yesBtn.style.transform = "scale(1.5)";
+    noBtn.classList.add("hidden");
+  }
+});
+
+/* YES final boss */
+yesBtn.addEventListener("click", () => {
+  shake(yesBtn);
+
+  heartbeat.play();
+
+  document.body.classList.add("screen-shake");
+  setTimeout(() => document.body.classList.remove("screen-shake"), 600);
+
+  /* Confetti shower */
+  for (let i = 0; i < 120; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random()*100 + "vw";
+    c.style.backgroundColor = `hsl(${Math.random()*360},100%,60%)`;
+    c.style.animationDuration = 2 + Math.random()*2 + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+
+  typeText("Come closer… 👀❤️", 80);
+
+  /* Slow zoom + dramatic pause */
+  setTimeout(() => {
+    document.body.style.transform = "scale(1.08)";
+  }, 1200);
+
+  setTimeout(() => {
+    document.body.innerHTML = `
+      <div id="fullscreen">
+        <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+      </div>
+    `;
+  }, 3500);
+});
+</script>
 
 </body>
 </html>
