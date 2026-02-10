@@ -1,234 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Valentine 💘</title>
+  <meta charset="UTF-8" />
+  <title>Valentine 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  body {
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-    /* Default background before clicking */
-    background: linear-gradient(135deg, #ffb3b3, #ffd6cc); 
-    text-align: center;
-  }
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Comic Sans MS", "Poppins", cursive;
+    }
 
-  h1 {
-    color: white;
-    font-size: 3rem;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-  }
+    body {
+      margin: 0;
+      background: #ffc9c9;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
 
-  #message {
-    color: white;
-    font-size: 1.4rem;
-    min-height: 35px;
-    margin-bottom: 20px;
-    font-weight: bold;
-  }
+    .container {
+      text-align: center;
+      max-width: 90%;
+    }
 
-  .buttons {
-    position: relative;
-    height: 140px;
-    width: 320px;
-  }
+    h1 {
+      font-size: 2.6rem;
+      color: white;
+      margin-bottom: 50px;
+      animation: heartbeat 1.5s infinite;
+    }
 
-  button {
-    padding: 14px 30px;
-    font-size: 1.3rem;
-    border: none;
-    border-radius: 40px;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-  }
+    .buttons {
+      position: relative;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
 
-  #yes {
-    background: #ff4d6d;
-    color: white;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: auto;
-    z-index: 10;
-  }
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 18px 40px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-  #no {
-    background: white;
-    color: #ff4d6d;
-    position: absolute;
-    left: 200px;
-  }
+    #yes {
+      background: #ff4f6d;
+      color: white;
+      box-shadow: 0 10px 30px rgba(255,79,109,0.5);
+      transform-origin: center;
+    }
 
-  .hidden { display: none !important; }
+    #no {
+      background: white;
+      color: #ff4f6d;
+    }
 
-  /* ===== Animations ===== */
+    .message {
+      margin-top: 30px;
+      font-size: 1.3rem;
+      color: #fff;
+      min-height: 1.5em;
+    }
 
-  .shake { animation: shake 0.4s; }
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    75% { transform: translateX(6px); }
-  }
+    /* Heartbeat */
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.05); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
 
-  .yes-zoom { animation: zoomIn 0.5s forwards; }
-  @keyframes zoomIn {
-    from { transform: scale(1); }
-    to { transform: scale(1.5); opacity: 0; }
-  }
+    /* Screen shake */
+    .shake {
+      animation: shake 0.4s;
+    }
 
-  .heart {
-    position: fixed;
-    top: -20px;
-    font-size: 24px;
-    animation: fall linear forwards;
-    pointer-events: none;
-    z-index: 1000;
-  }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-6px); }
+      100% { transform: translateX(0); }
+    }
 
-  @keyframes fall {
-    to { transform: translateY(110vh) rotate(360deg); }
-  }
+    /* Confetti hearts */
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      animation: fall 3s linear forwards;
+    }
 
-  /* ===== FULLSCREEN SUCCESS SCREEN ===== */
+    @keyframes fall {
+      0% {
+        transform: translateY(-20px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
 
-  #fullscreen {
-    position: fixed;
-    inset: 0;
-    /* Matches the split pink background in your screenshot */
-    background: linear-gradient(90deg, #ffcccc 50%, #ffe6e6 50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 1s ease;
-  }
+    /* Final screen */
+    .final {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
 
-  #fullscreen.show {
-    opacity: 1;
-  }
+    .final img {
+      max-width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      margin-top: 20px;
+    }
 
-  .yay-text {
-    font-size: 4rem;
-    color: #ff4d6d;
-    font-weight: bold;
-    letter-spacing: 2px;
-    animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  @keyframes popIn {
-    0% { transform: scale(0); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-</style>
+    .zoom {
+      transform: scale(1.4);
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>Will you be My Valentine, Kasish? 💖</h1>
-<div id="message"></div>
+  <div class="container" id="main">
+    <h1>Will you be My Valentine, Kasish? 💖</h1>
 
-<div class="buttons">
-  <button id="yes">Yes 💖</button>
-  <button id="no">No 😏</button>
-</div>
+    <div class="buttons">
+      <button id="yes">Yes 💞</button>
+      <button id="no">No 😏</button>
+    </div>
 
-<audio id="heartbeat" src="https://assets.mixkit.co/sfx/preview/mixkit-heartbeat-fast-485.mp3"></audio>
+    <div class="message" id="message"></div>
+  </div>
 
-<!-- Updated Fullscreen container with TEXT instead of Image -->
-<div id="fullscreen" class="hidden">
-  <div class="yay-text">YAYYYYY 💕 💋</div>
-</div>
+  <div class="final" id="final">
+    <h1>YAYYY 💕💍</h1>
+    <p>You made my heart explode 😭❤️</p>
+    <img src="/mnt/data/d84d40b0-7d42-4bdc-9678-fdb26b58ae7c.png" alt="Cat Kiss">
+  </div>
 
-<script>
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
-const message = document.getElementById("message");
-const heartbeat = document.getElementById("heartbeat");
-const fullscreen = document.getElementById("fullscreen");
+  <script>
+    const noTexts = [
+      "Think again 🤨",
+      "You are hurting me 💔",
+      "Enough... I am crying now!! 😭"
+    ];
 
-const texts = [
-  "Think again...",
-  "You are hurting me 🥺",
-  "Enough... I am crying now!! 😭"
-];
+    let noCount = 0;
+    let yesScale = 1;
 
-let count = 0;
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const msg = document.getElementById("message");
+    const body = document.body;
 
-function typeText(text, speed = 50) {
-  message.innerText = "";
-  let i = 0;
-  const interval = setInterval(() => {
-    message.innerText += text[i];
-    i++;
-    if (i >= text.length) clearInterval(interval);
-  }, speed);
-}
+    noBtn.addEventListener("click", () => {
+      msg.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+      noCount++;
 
-/* NO button logic */
-noBtn.addEventListener("mouseover", () => {
-  noBtn.classList.add("shake");
-  setTimeout(() => noBtn.classList.remove("shake"), 400);
+      yesScale += 0.25;
+      yesBtn.style.transform = `scale(${yesScale})`;
 
-  if (count < texts.length) {
-    typeText(texts[count]);
-    count++;
-  } else {
-    /* If they keep hovering No, hide it and make Yes huge */
-    noBtn.classList.add("hidden");
-    // Make yes button throb to attention
-    yesBtn.style.transform = "scale(1.5)"; 
-  }
+      body.classList.add("shake");
+      setTimeout(() => body.classList.remove("shake"), 400);
 
-  // Move button randomly
-  const x = Math.random() * (window.innerWidth - 200);
-  const y = Math.random() * (window.innerHeight - 100);
-  
-  // Keep it somewhat within bounds
-  noBtn.style.position = "fixed"; 
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-});
+      if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100]);
+      }
+    });
 
-/* YES button logic */
-yesBtn.addEventListener("click", () => {
-  heartbeat.play();
+    yesBtn.addEventListener("click", () => {
+      yesBtn.classList.add("zoom");
 
-  // 1. Hide the initial UI
-  yesBtn.classList.add("yes-zoom");
-  noBtn.classList.add("hidden");
-  document.querySelector('h1').style.display = 'none';
-  message.style.display = 'none';
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
 
-  // 2. Rain Hearts
-  for (let i = 0; i < 100; i++) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerText = Math.random() > 0.5 ? "❤️" : "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = 2 + Math.random() * 3 + "s";
-    heart.style.fontSize = (20 + Math.random() * 20) + "px";
-    document.body.appendChild(heart);
-  }
+      for (let i = 0; i < 60; i++) {
+        createHeart();
+      }
 
-  // 3. Show the Success Screen after a tiny delay
-  setTimeout(() => {
-    fullscreen.classList.remove("hidden");
-    // Force a reflow so transition works
-    void fullscreen.offsetWidth; 
-    fullscreen.classList.add("show");
-  }, 400);
-});
+      setTimeout(() => {
+        document.getElementById("main").style.display = "none";
+        document.getElementById("final").style.display = "flex";
+      }, 900);
+    });
 
-</script>
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 4000);
+    }
+  </script>
 
 </body>
 </html>
